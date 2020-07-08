@@ -4,7 +4,6 @@ This repo provides examples for different languages that use Red Hat provided S2
 ## Prerequisites
 * helm >= 3
 * [cert-utils-operator](https://github.com/redhat-cop/cert-utils-operator)
-* [resource-locker]() - temporary until [#52](https://github.com/redhat-cop/cert-utils-operator/issues/52) is resolved
 
 ## Samples
 
