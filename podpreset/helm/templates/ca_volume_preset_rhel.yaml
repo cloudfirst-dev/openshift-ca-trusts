@@ -1,0 +1,36 @@
+---
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: PodPreset
+metadata:
+  name: ca-rhel-inject
+  namespace: {{ .Values.namespace }}
+spec:
+  volumeMounts:
+    - mountPath: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      name: ca-trust
+      subPath: ca-bundle.crt
+  volumes:
+    - name: ca-trust
+      configMap:
+        name: ca-trust
+  selector:
+    matchLabels:
+      ca-bundle-type: rhel
+---
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: PodPreset
+metadata:
+  name: ca-rhel-java-inject
+  namespace: {{ .Values.namespace }}
+spec:
+  volumeMounts:
+    - mountPath: /etc/pki/ca-trust/extracted/java/cacerts
+      name: ca-trust
+      subPath: truststore.jks
+  volumes:
+    - name: ca-trust
+      configMap:
+        name: ca-trust
+  selector:
+    matchLabels:
+      ca-bundle-type: rhel-java
