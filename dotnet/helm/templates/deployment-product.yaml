@@ -30,6 +30,7 @@ spec:
       labels:
         app: product-service
         deploymentconfig: product-service
+        ca-bundle-type: rhel
       annotations:
         sidecar.istio.io/inject: 'true'
     spec:
@@ -43,12 +44,3 @@ spec:
           env:
             - name: RatingUrl
               value: "https://rating-{{ .Release.Namespace }}.apps.{{ .Values.route_hostname }}"
-          volumeMounts:
-            - name: ca-trust
-              mountPath: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-              subPath: ca-bundle.crt
-      volumes:
-      - name: ca-trust
-        configMap:
-          name: ca-trust
-          defaultMode: 420
