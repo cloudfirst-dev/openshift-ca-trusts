@@ -9,16 +9,6 @@ metadata:
     app.kubernetes.io/instance: product-service
     app.kubernetes.io/part-of: product-service-app
 spec:
-  strategy:
-    type: Rolling
-    rollingParams:
-      updatePeriodSeconds: 1
-      intervalSeconds: 1
-      timeoutSeconds: 600
-      maxUnavailable: 25%
-      maxSurge: 25%
-    resources: {}
-    activeDeadlineSeconds: 21600
   triggers:
     - type: ImageChange
       imageChangeParams:
@@ -31,7 +21,6 @@ spec:
     - type: ConfigChange
   replicas: 1
   revisionHistoryLimit: 10
-  test: false
   selector:
     app: product-service
     deploymentconfig: product-service
@@ -50,25 +39,14 @@ spec:
           ports:
             - containerPort: 8080
               protocol: TCP
-            - containerPort: 8443
-              protocol: TCP
-            - containerPort: 8778
-              protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
           imagePullPolicy: IfNotPresent
           env:
             - name: RATING_URL
               value: "https://rating-{{ .Release.Namespace }}.apps.{{ .Values.route_hostname }}"
           volumeMounts:
             - name: ca-trust
-              mountPath: /ca/trust
-      restartPolicy: Always
-      terminationGracePeriodSeconds: 30
-      dnsPolicy: ClusterFirst
-      securityContext: {}
-      schedulerName: default-scheduler
+              mountPath: /etc/pki/ca-trust/extracted/java/cacerts
+              subPath: truststore.jks
       volumes:
       - name: ca-trust
         secret:

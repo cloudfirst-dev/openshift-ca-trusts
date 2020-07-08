@@ -4,5 +4,6 @@ kind: ConfigMap
 metadata:
   labels:
     config.openshift.io/inject-trusted-cabundle: "true"
+    cert-utils-operator.redhat-cop.io/generate-java-truststore: "true"
   name: ca-trust
   namespace: {{ .Release.Namespace }}
