@@ -1,0 +1,54 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: product-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: product-service
+    app.kubernetes.io/component: product-service
+    app.kubernetes.io/instance: product-service
+    app.kubernetes.io/part-of: product-service-app
+spec:
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - product-service
+        from:
+          kind: ImageStreamTag
+          name: 'product-service:latest'
+    - type: ConfigChange
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: product-service
+    deploymentconfig: product-service
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: product-service
+        deploymentconfig: product-service
+      annotations:
+        sidecar.istio.io/inject: 'true'
+    spec:
+      containers:
+        - name: product-service
+          image: ' '
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: RatingUrl
+              value: "https://rating-{{ .Release.Namespace }}.apps.{{ .Values.route_hostname }}"
+          volumeMounts:
+            - name: ca-trust
+              mountPath: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+              subPath: ca-bundle.crt
+      volumes:
+      - name: ca-trust
+        configMap:
+          name: ca-trust
+          defaultMode: 420

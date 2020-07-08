@@ -1,0 +1,23 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: rating-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: rating-service
+    app.kubernetes.io/component: rating-service
+    app.kubernetes.io/instance: rating-service
+    app.kubernetes.io/part-of: rating-service-app
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: 'quay.io/cloudfirst/dotnet-rating-service:latest'
+      generation: 2
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
