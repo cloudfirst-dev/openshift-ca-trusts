@@ -16,7 +16,7 @@ spec:
       serviceAccountName: podpreset-webhook
       containers:
         - name: podpreset-webhook
-          image: quay.io/mathianasj/podpreset-webhook:dev
+          image: quay.io/mathianasj/podpreset-webhook:latest
           command:
             - podpreset-webhook
           imagePullPolicy: Always
