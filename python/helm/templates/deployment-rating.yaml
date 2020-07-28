@@ -1,0 +1,39 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: rating-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: rating-service
+    app.kubernetes.io/component: rating-service
+    app.kubernetes.io/instance: rating-service
+    app.kubernetes.io/part-of: rating-service-app
+spec:
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - rating-service
+        from:
+          kind: ImageStreamTag
+          name: 'rating-service:latest'
+    - type: ConfigChange
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: rating-service
+    deploymentconfig: rating-service
+  template:
+    metadata:
+      labels:
+        app: rating-service
+        deploymentconfig: rating-service
+    spec:
+      containers:
+        - name: rating-service
+          image: ' '
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
