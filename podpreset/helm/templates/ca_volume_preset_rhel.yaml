@@ -34,3 +34,24 @@ spec:
   selector:
     matchLabels:
       ca-bundle-type: rhel-java
+---
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: PodPreset
+metadata:
+  name: ca-rhel-python-inject
+  namespace: {{ .Values.namespace }}
+spec:
+  volumeMounts:
+    - mountPath: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      name: ca-trust
+      subPath: ca-bundle.crt
+  volumes:
+    - name: ca-trust
+      configMap:
+        name: ca-trust
+  env:
+    - name: REQUESTS_CA_BUNDLE
+      value: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+  selector:
+    matchLabels:
+      ca-bundle-type: rhel-python
